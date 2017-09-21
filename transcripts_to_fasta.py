@@ -8,9 +8,16 @@ parser = argparse.ArgumentParser(description = 'given a GFF/GTF file of transcri
 parser.add_argument('fasta_file', action = 'store')
 parser.add_argument('gtf_file', action = 'store')
 parser.add_argument('output_file', type = argparse.FileType('w'), default = sys.stdout, nargs = '?')
+parser.add_argument('-i', '--infer', action = 'store_true', help = 'infer transcripts (not listed separately in GTF')
 args = parser.parse_args()
 
-db = gffutils.create_db(args.gtf_file, DB_FILE, force = True)
+db = gffutils.create_db(
+	args.gtf_file,
+	DB_FILE,
+	force = True,
+	disable_infer_transcripts = not args.infer,
+	disable_infer_genes = not args.infer
+)
 
 for transcript in db.features_of_type('transcript'):
 	transcript_id_list = transcript['transcript_id']
@@ -18,7 +25,12 @@ for transcript in db.features_of_type('transcript'):
 	transcript_id = transcript_id_list[0]
 	
 	seq = ''
-	for exon in db.children(transcript_id, featuretype = 'exon', order_by = 'start', reverse = (transcript.strand == '-')):
+	for exon in db.children(
+		transcript_id,
+		featuretype = 'exon',
+		order_by = 'start',
+		reverse = (transcript.strand == '-')
+	):
 		assert exon.chrom == transcript.chrom
 		seq += exon.sequence(args.fasta_file)
 	
