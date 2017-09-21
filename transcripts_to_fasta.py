@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import sys, os, argparse, gffutils
+import sys, os, argparse, gffutils, pyfaidx
 
 DB_FILE = '/tmp/transcripts_to_fasta.db'
 
@@ -19,6 +19,7 @@ db = gffutils.create_db(
 	disable_infer_genes = not args.infer
 )
 
+fasta = pyfaidx.Fasta(args.fasta_file)
 for transcript in db.features_of_type('transcript'):
 	transcript_id_list = transcript['transcript_id']
 	assert(len(transcript_id_list) == 1)
@@ -32,7 +33,7 @@ for transcript in db.features_of_type('transcript'):
 		reverse = (transcript.strand == '-')
 	):
 		assert exon.chrom == transcript.chrom
-		seq += exon.sequence(args.fasta_file)
+		seq += exon.sequence(fasta)
 	
 	args.output_file.write('>%s\n%s\n' % (transcript_id, seq))
 
