@@ -21,7 +21,7 @@ N_MOST_COMMON = 20 # number of most common reads to report
 
 read_counts = collections.Counter()
 index_table = collections.OrderedDict()
-index_rainbow_table = {}
+index_rainbow_table = collections.defaultdict(set)
 index_counts = collections.Counter()
 sample_table = collections.defaultdict(str)
 
@@ -30,7 +30,6 @@ if len(sys.argv) >= 2:
 	for line in open(sys.argv[1]):
 		name, sequence = line.rstrip().split('\t')
 		index_table[name] = sequence
-		index_rainbow_table[name] = set([sequence])
 		for i in range(len(sequence)):
 			for base in ALPHABET:
 				index_rainbow_table[name].add(sequence[:i] + base + sequence[i + 1:])
