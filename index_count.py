@@ -1,7 +1,7 @@
 #! /usr/bin/env pypy
 
 # count the number of times each index sequence is be observed
-# if a table of known sequences is provided, count hits to each one, with mismatch tolerance
+# if a table of known sequences is provided, count hits to each one, with 1 mismatch tolerance (bcl2fastq default)
 # if a sample sheet is also provided, label known sequences with sample IDs
 # FASTQ sequences are truncated to the length of the known index sequences
 # this will double-count reads that match more than one index!
@@ -15,15 +15,13 @@
 from __future__ import print_function
 import sys, collections
 
-ALLOWED_MISMATCHES = 1 # bcl2fastq default
+ALPHABET = 'ACGTN'
 N_MOST_COMMON = 20 # number of most common reads to report
 
-def distance(array1, array2):
-  assert len(array1) == len(array2)
-  return sum(i1 != i2 for i1, i2 in zip(array1, array2))
 
 read_counts = collections.Counter()
 index_table = collections.OrderedDict()
+index_rainbow_table = {}
 index_counts = collections.Counter()
 sample_table = collections.defaultdict(str)
 
@@ -32,6 +30,10 @@ if len(sys.argv) >= 2:
 	for line in open(sys.argv[1]):
 		name, sequence = line.rstrip().split('\t')
 		index_table[name] = sequence
+		index_rainbow_table[name] = set([sequence])
+		for i in range(len(sequence)):
+			for base in ALPHABET:
+				index_rainbow_table[name].add(sequence[:i] + base + sequence[i + 1:])
 
 if len(sys.argv) >= 3:
 	in_data = False
@@ -59,7 +61,7 @@ for line in sys.stdin:
 		index_read = line.rstrip()[line.rindex(':') + 1:]
 		read_counts[index_read] += 1
 		for name, known_sequence in index_table.items():
-			index_counts[name] += (distance(known_sequence, index_read[:len(known_sequence)]) <= ALLOWED_MISMATCHES)
+			index_counts[name] += index_read[:len(known_sequence)] in index_rainbow_table[name]
 
 
 for read_freq in read_counts.most_common(N_MOST_COMMON):
