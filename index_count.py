@@ -13,10 +13,14 @@
 
 
 from __future__ import print_function
-import sys, collections, distance
+import sys, collections
 
 ALLOWED_MISMATCHES = 1 # bcl2fastq default
 N_MOST_COMMON = 20 # number of most common reads to report
+
+def distance(array1, array2):
+  assert len(array1) == len(array2)
+  return sum(i1 != i2 for i1, i2 in zip(array1, array2))
 
 read_counts = collections.Counter()
 index_table = collections.OrderedDict()
@@ -55,7 +59,7 @@ for line in sys.stdin:
 		index_read = line.rstrip()[line.rindex(':') + 1:]
 		read_counts[index_read] += 1
 		for name, known_sequence in index_table.items():
-			index_counts[name] += (distance.hamming(known_sequence, index_read[:len(known_sequence)]) <= ALLOWED_MISMATCHES)
+			index_counts[name] += (distance(known_sequence, index_read[:len(known_sequence)]) <= ALLOWED_MISMATCHES)
 
 
 for read_freq in read_counts.most_common(N_MOST_COMMON):
