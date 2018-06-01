@@ -4,7 +4,7 @@
 # allow target sequence or reference genome to contain ambiguous bases in IUPAC format
 # this will find overlapping hits
 # if the target sequence isn't a palindrome, it will find hits on both strands and label the BED accordingly
-# is there anything more useful to put in the BED?
+# is there anything more useful to put in the BED? maybe the found reference sequence? then could filter the BED if desired
 # doesn't count hits with too many N in the reference sequence
 # this is slow; use pypy
 
