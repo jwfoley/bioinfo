@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env pypy
 
 # given a specific sequence (e.g. restriction enzyme's motif), make a BED file of all perfect matches in a reference genome (FASTA)
 # allow target sequence or reference genome to contain ambiguous bases in IUPAC format
@@ -6,7 +6,7 @@
 # if the target sequence isn't a palindrome, it will find hits on both strands and label the BED accordingly
 # is there anything more useful to put in the BED? maybe the found reference sequence? then could filter the BED if desired
 # doesn't count hits with too many N in the reference sequence
-# this is slow; use pypy
+# this is slow if you don't use pypy
 
 
 import regex, sys
