@@ -21,6 +21,7 @@ for file_number in range(n_files):
 
 # print header
 print('\t'.join(['aligned length'] + sys.argv[1:]))
+# print table
 for length in range(max(counts.keys())):
 	print('\t'.join(map(str, [length] + counts[length])))
 
