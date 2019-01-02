@@ -5,7 +5,7 @@
 
 import sys, genomerator
 
-gene_input = genomerator.GtfStream(sys.stdin, verify_sorted = True)
+gene_input = genomerator.GtfStream(sys.stdin, assert_sorted = True)
 gene_overlapper = genomerator.FeatureOverlapper(gene_input)
 for genes in gene_overlapper:
 	intron_buffer = []
