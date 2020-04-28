@@ -3,7 +3,6 @@
 # convert the chromosome names in an NCBI-style VCF from RefSeq accession numbers to UCSC-style names
 # use an NCBI assembly report file to look up the conversions
 # if the report gives "na" for the UCSC-style name, keep the accession number
-# can be used on an entire VCF but it's probably faster to just make a new header and use "bcftools reheader"
 
 import sys
 
@@ -30,6 +29,12 @@ for line in sys.stdin:
 			print('##contig=<ID=' + conversion_table[accession] + '>')
 		except KeyError:
 			print(line, end = '')
-	else:
+	elif line.startswith('#'):
 		print(line, end = '')
+	else:
+		accession_end = line.find('\t')
+		try:
+			print(conversion_table[line[:accession_end]] + line[accession_end:], end = '')
+		except KeyError:
+			print(line, end = '')
 
