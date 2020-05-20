@@ -111,6 +111,5 @@ if not (len(buffer1) == len(buffer2) == 0):
 	for alignment2 in buffer2.values():
 		counts[compare_read_positions(None, alignment2)] +=1
 
-print('TOTAL\t%i' % sum(counts.values()))
 for category, count in counts.items(): print('%s\t%i' % (category, count))
 
