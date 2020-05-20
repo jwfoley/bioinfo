@@ -22,8 +22,8 @@ def compare_read_positions (alignment1, alignment2):
 		return 'file2_only'
 	elif (
 		alignment1.is_reverse == alignment2.is_reverse and
-		alignment1.reference_start == alignment2.reference_start and
-		alignment1.reference_name == alignment2.reference_name
+		alignment1.reference_name == alignment2.reference_name and
+		alignment1.reference_start - alignment1.query_alignment_start == alignment2.reference_start - alignment2.query_alignment_start # ignore soft-clipping differences
 	):
 		if outputs['concordant'] is not None: outputs['concordant'].write(alignment1)
 		return 'concordant'
