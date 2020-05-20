@@ -37,13 +37,23 @@ def compare_read_positions (alignment1, alignment2):
 		return 'discordant'
 
 
-parser = argparse.ArgumentParser(description = 'Given two unsorted SAM/BAM files generated from the same original FASTQ data, detect which reads were aligned at the same position in both SAM files, which were aligned in one but not the other, and which were aligned in different places. Input files should preferably include unaligned reads and contain the reads in roughly the same order in both files (probably the order of the original FASTQ file) but buffering allows some deviation at the expense of memory. Output file for concordant reads will only contain the alignments from file1. Output file for discordant reads will contain both alignments of each read.')
+parser = argparse.ArgumentParser(description = '''
+Given two unsorted SAM/BAM files generated from the same original FASTQ data, detect which reads were aligned at the same position in both SAM files, which were aligned in one but not the other, and which were aligned in different places.
+
+Input files should preferably include unaligned reads and contain the reads in roughly the same order in both files (probably the order of the original FASTQ file) but buffering allows other configurations at the expense of memory.
+
+Alignments are considered to be concordant if they are on the same strand and overlap by at least one base. The same sequence is very unlikely to align in two overlapping positions by chance, and other definitions are difficult to implement for all possible corner cases.
+
+Output file for concordant reads will only contain the alignments from file1. Output file for discordant reads will contain both alignments of each read. All output files except '--file2-only' copy the header from the first input file.
+
+If you're clever, you can stream aligners directly into this script and the output directly into samtools with command substitution.
+''')
 parser.add_argument('-c', '--concordant', metavar = 'BAMFILE', help = 'output for concordantly aligned reads')
 parser.add_argument('-1', '--file1-only', metavar = 'BAMFILE', help = 'output for reads present only in file 1')
 parser.add_argument('-2', '--file2-only', metavar = 'BAMFILE', help = 'output for reads present only in file 2')
 parser.add_argument('-d', '--discordant', metavar = 'BAMFILE', help = 'output for discordantly aligned reads')
-parser.add_argument('file1', metavar = 'BAMFILE')
-parser.add_argument('file2', metavar = 'BAMFILE')
+parser.add_argument('file1', metavar = 'BAMFILE1')
+parser.add_argument('file2', metavar = 'BAMFILE2')
 args = parser.parse_args()
 
 
