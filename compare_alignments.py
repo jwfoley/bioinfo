@@ -23,7 +23,10 @@ def compare_read_positions (alignment1, alignment2):
 	elif (
 		alignment1.is_reverse == alignment2.is_reverse and
 		alignment1.reference_name == alignment2.reference_name and
-		alignment1.reference_start - alignment1.query_alignment_start == alignment2.reference_start - alignment2.query_alignment_start # ignore soft-clipping differences
+		not ( # check whether reads overlap, in reverse by checking whether one is past the other
+			alignment1.reference_end - 1 < alignment2.reference_start or # alignment 1 is entirely to the left of alignment2
+			alignment2.reference_end - 1 < alignment1.reference_start # alignment 2 is entirely to the left of alignment1
+		)
 	):
 		if outputs['concordant'] is not None: outputs['concordant'].write(alignment1)
 		return 'concordant'
