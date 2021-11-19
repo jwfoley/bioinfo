@@ -18,6 +18,6 @@ subsample.count.mat <- function(count.mat, p.vec) {
 subsample.increments <- function(count.mat, totals = colSums(count.mat), increment = 5E5) {
 	stopifnot(length(totals) == ncol(count.mat))
 	targets <- increment * seq(floor(max(totals) / increment))
-	do.call(abind, c(mclapply(targets, function(target) subsample.count.mat(count.mat, target / totals)), along = 3, list(new.names = as.character(targets))))
+	do.call(abind, c(mclapply(targets, function(target) subsample.count.mat(count.mat, target / totals)), along = 3, list(new.names = format(targets, scientific = F))))
 }
 
