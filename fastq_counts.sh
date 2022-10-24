@@ -6,5 +6,5 @@ then
 	exit 1
 fi
 
-parallel 'echo -e {/.}\t$(( $(gzip -dc {} | wc -l) / 4 ))' ::: ${@[*]}
+parallel 'echo -e {/.}\t$(( $(gzip -dc {} | wc -l) / 4 ))' ::: "$@"
 
