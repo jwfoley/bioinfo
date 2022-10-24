@@ -2,7 +2,7 @@
 
 if [ ! -n "$1" ]
 then
-	echo "usage: $(basename $0) file1.fastq.gz file2.fastq.gz ..." >&2
+	echo -e "usage: $(basename $0) file1.fastq.gz file2.fastq.gz ...\nfor paired-end reads, you probably only want R1" >&2
 	exit 1
 fi
 
