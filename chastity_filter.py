@@ -53,7 +53,7 @@ for name, seq, qualities in readfq(sys.stdin):
 		failed = readname_regex.match(name).groups()[0]
 		if failed == 'N':
 			n_pass += 1
-			print(writefq(name, seq, qualities))
+			print(writefq(name, seq, qualities), end = '')
 		elif failed == 'Y':
 			n_fail += 1
 		else:
