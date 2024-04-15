@@ -2,8 +2,10 @@
 
 # given a list of strings of the same length (e.g. index sequences), report a Hamming distance matrix
 # remember you can terminate console STDIN with Ctrl-D
+# writes distance matrix to STDOUT and summary of distances to STDERR
 
 from scipy.spatial.distance import hamming
+from collections import Counter
 import sys
 
 sequences = []
@@ -22,9 +24,15 @@ for line in sys.stdin:
 	sequences += [seq]
 
 print('\t'.join([''] + sequences))
+distances = Counter()
 for i in range(len(sequences)):
 	output = [sequences[i]]
 	for j in range(0, i):
-		output += [str(int(seq_length * hamming(tuple(sequences[i]), tuple(sequences[j]))))]
+		dist = int(seq_length * hamming(tuple(sequences[i]), tuple(sequences[j])))
+		output += [str(dist)]
+		distances[dist] += 1
 	print('\t'.join(output))
+
+print('distance\tfrequency', file = sys.stderr)
+for dist, count in sorted(distances.items()): print('%i\t%i' % (dist, count), file = sys.stderr)
 
