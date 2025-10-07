@@ -18,9 +18,9 @@ read.featureCounts.summary <- function(file, remove.dir = TRUE) {
 	return(counts)
 } 
 
-# easily calculate proportion of reads assigned from featureCounts category counts
-# expects output of read.featureCounts.summary
-# easy usage:
-# > prop.assigned <- get.prop.assigned(read.featureCounts.summary(file))
-get.prop.assigned <- function(counts) counts["Assigned",] / colSums(counts)
+# easily calculate proportion of reads assigned from featureCounts category counts file
+get.prop.assigned <- function(file, ...) {
+	counts <- read.featureCounts.summary(file, ...)
+	return(counts["Assigned",] / colSums(counts))
+}
 
